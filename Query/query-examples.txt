@@ -1,0 +1,41 @@
+﻿list databases														| list dbs
+list documents from {database}										| list docs from {database}
+list users
+
+
+
+create database {database-name}										| create db {database-name}
+create document {document-name} in {database}						| create doc {document-name} in {database}
+create user {username} {password} [permission-level(default=1)]
+
+
+
+delete database {database-name}										| delete db {database-name}
+delete document {document-name} in {database}						| delete doc {document} in {database}
+delete user {username}
+
+
+
+get snapshot from {database} [{document} [subsection]]
+get size from {database} [document]
+
+
+
+move document {document} from {database} to {database}				| move doc {document} from {database} to {database}
+copy document {document} from {database} to {database}				| copy doc {document} from {database} to {database}
+
+
+
+rename database {database}											| rename db {database}
+rename document {document} in {database}							| rename doc {document} in {database}
+
+
+
+backup {database}
+backup {document} in {database}
+
+
+
+
+// {} -> required
+// [] -> optional
