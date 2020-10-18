@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Lucraft.Database.Query;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -50,6 +51,5 @@ namespace Lucraft.Database
                 File.WriteAllText(Filename, JsonConvert.SerializeObject(data));
             }
         }
-
     }
 }
