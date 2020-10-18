@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Lucraft.Database.Query;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -111,8 +112,29 @@ namespace Lucraft.Database
                 case "get":
                     if (pathSplit[2] == "*")
                     {
-                        Document[] documents = collection.Documents.ToArray();
-                        response["documents"] = documents;
+                        if (request.Substring(requestType.Length + path.Length + 1).Length == request.Length)
+                        {
+                            Document[] documents = collection.Documents.ToArray();
+                            response["documents"] = documents;
+                        }
+                        else
+                        {
+                            // handle query
+                            string query = request.Split(" where ")[1];
+                            Condition matchCondition = Condition.GetCondition(query); // new Condition("name", "==", "Daytimer");
+
+                            Document[] documents = collection.Documents.ToArray();
+                            List<Document> matchingDocuments = new List<Document>();
+
+                            foreach (Document doc in documents)
+                            {
+                                if (matchCondition.Check(doc)) matchingDocuments.Add(doc);
+                            }
+
+                            response["documents"] = matchingDocuments.ToArray();
+
+                            //HandleQuery(request.Split(" where ")[1], out response);
+                        }
                     }
                     else if (document == null)
                     {
@@ -145,8 +167,9 @@ namespace Lucraft.Database
             return JsonConvert.SerializeObject(response);
         }
 
-        private string HandleQuery(string query)
+        private string HandleQuery(string query, out Dictionary<string, object> response)
         {
+            response = new Dictionary<string, object>();
 
             return "";
         }
