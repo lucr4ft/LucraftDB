@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -49,6 +51,11 @@ namespace Lucraft.Database.Query
                 {
                     "==" => data.ContainsKey(field) && data[field].Equals(value),
                     "!=" => data.ContainsKey(field) && !data[field].Equals(value),
+                    "<" => data.ContainsKey(field) && (decimal)data[field] < (decimal)value,
+                    ">" => data.ContainsKey(field) && (decimal)data[field] > (decimal)value,
+                    "<=" => data.ContainsKey(field) && (decimal)data[field] <= (decimal)value,
+                    ">=" => data.ContainsKey(field) && (decimal)data[field] >= (decimal)value,
+                    "contains" => data.ContainsKey(field) && data[field] is JArray array && Contains(array, value),
                     _ => false
                 };
             }
@@ -61,6 +68,16 @@ namespace Lucraft.Database.Query
                     _ => false,
                 };
             }
+        }
+
+        private bool Contains(JArray array, object value)
+        {
+            foreach (JValue val in array)
+            {
+                if (val.Value.Equals(value)) return true;
+                //Console.WriteLine(val.Value.Equals("a"));
+            }
+            return false;
         }
 
         public static Condition GetCondition(string query)
