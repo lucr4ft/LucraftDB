@@ -132,8 +132,6 @@ namespace Lucraft.Database
                             }
 
                             response["documents"] = matchingDocuments.ToArray();
-
-                            //HandleQuery(request.Split(" where ")[1], out response);
                         }
                     }
                     else if (document == null)
@@ -165,13 +163,6 @@ namespace Lucraft.Database
             }
 
             return JsonConvert.SerializeObject(response);
-        }
-
-        private string HandleQuery(string query, out Dictionary<string, object> response)
-        {
-            response = new Dictionary<string, object>();
-
-            return "";
         }
 
     }
