@@ -1,8 +1,5 @@
-﻿using Lucraft.Database.Query;
-using Newtonsoft.Json;
-using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 
 namespace Lucraft.Database
@@ -17,29 +14,26 @@ namespace Lucraft.Database
         private readonly object locker = new object();
 
         [JsonProperty("data")]
-        private Dictionary<string, object> data;
+        private Dictionary<string, object> Data => GetData();
 
         public Document(string filename)
         {
             lock (locker)
             {
+                Filename = filename;
                 if (!File.Exists(filename))
                 {
                     File.Create(filename).Close();
-                } 
-                else
-                {
-                    data = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(filename));
                 }
             }
-            Filename = filename;
+            
         }
 
         public Dictionary<string, object> GetData()
         {
             lock (locker)
             {
-                return data;//JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(Filename));
+                return JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(Filename)); // data;
             }
         }
 
@@ -47,7 +41,7 @@ namespace Lucraft.Database
         {
             lock (locker)
             {
-                this.data = data;
+                //this.data = data;
                 File.WriteAllText(Filename, JsonConvert.SerializeObject(data));
             }
         }
