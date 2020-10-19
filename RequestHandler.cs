@@ -112,7 +112,7 @@ namespace Lucraft.Database
                 case "get":
                     if (pathSplit[2] == "*")
                     {
-                        if (request.Substring(requestType.Length + path.Length + 1).Length == request.Length)
+                        if (requestType.Length + path.Length + 1 == request.Length)
                         {
                             Document[] documents = collection.Documents.ToArray();
                             response["documents"] = documents;
@@ -121,15 +121,14 @@ namespace Lucraft.Database
                         {
                             // handle query
                             string query = request.Split(" where ")[1];
-                            Condition matchCondition = Condition.GetCondition(query); // new Condition("name", "==", "Daytimer");
+                            Condition matchCondition = Condition.GetCondition(query);
 
                             Document[] documents = collection.Documents.ToArray();
                             List<Document> matchingDocuments = new List<Document>();
 
                             foreach (Document doc in documents)
-                            {
-                                if (matchCondition.Check(doc)) matchingDocuments.Add(doc);
-                            }
+                                if (matchCondition.Check(doc)) 
+                                    matchingDocuments.Add(doc);
 
                             response["documents"] = matchingDocuments.ToArray();
                         }
@@ -159,7 +158,6 @@ namespace Lucraft.Database
                 default:
                     response["error"] = requestType + " requests are currently not supported!";
                     break;
-                    //throw new NotSupportedException(requestType + " requests are currently not supported!");
             }
 
             return JsonConvert.SerializeObject(response);
