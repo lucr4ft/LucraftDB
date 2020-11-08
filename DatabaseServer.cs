@@ -8,7 +8,7 @@ namespace Lucraft.Database
     public class DatabaseServer
     {
         public static readonly string ROOT_PATH = Directory.GetCurrentDirectory();
-        public static readonly Config Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(ROOT_PATH + "\\config.json"));
+        public static readonly Config Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(ROOT_PATH + "/config.json"));
 
         public static readonly DatabaseServer Instance = new DatabaseServer();
 

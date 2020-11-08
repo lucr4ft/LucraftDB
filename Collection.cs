@@ -23,7 +23,7 @@ namespace Lucraft.Database
 
         public Document CreateDocument(string id)
         {
-            Document document = new Document(Path + "\\" + id + ".db")
+            Document document = new Document(Path + "/" + id + ".db")
             {
                 ID = id
             };
@@ -38,7 +38,7 @@ namespace Lucraft.Database
             {
                 try
                 {
-                    File.Delete(Path + "\\" + id + ".db");
+                    File.Delete(Path + "/" + id + ".db");
                     error = null;
                     Documents.Remove(document);
                     return true;
