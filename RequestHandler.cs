@@ -73,7 +73,7 @@ namespace Lucraft.Database
                 case "set":
                     if (document == null) 
                         document = collection.CreateDocument(pathSplit[2]);
-                    string s = request.Substring(requestType.Length + path.Length + 2);
+                    string s = request[(requestType.Length + path.Length + 2)..];
                     document.SetData(JsonConvert.DeserializeObject<Dictionary<string, object>>(s));
                     break;
                 case "delete":
