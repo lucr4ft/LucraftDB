@@ -48,6 +48,8 @@ namespace Lucraft.Database
                             string query = request.Split(" where ")[1];
                             Condition matchCondition = Condition.GetCondition(query);
 
+                            Console.WriteLine(matchCondition.ToString());
+
                             Document[] documents = collection.Documents.ToArray();
                             List<Document> matchingDocuments = new List<Document>();
 
