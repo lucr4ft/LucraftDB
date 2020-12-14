@@ -34,19 +34,19 @@ namespace Lucraft.Database.Query
 
         public bool Check(Document document)
         {
-            Console.WriteLine("Type: " + type);
+            //Console.WriteLine("Type: " + type);
             if (type == 0)
             {
-                Console.WriteLine(field + " - " + op + " - " + value);
+                //Console.WriteLine(field + " - " + op + " - " + value);
 
                 Dictionary<string, object> data = document.GetData();
-                try
-                {
-                    Console.WriteLine((data.ContainsKey(field) && data[field].Equals(value)) + " - " + data[field] + " - " + value.GetType() + " - " + data[field].GetType());
-                }
-                catch (Exception)
-                {
-                }
+                //try
+                //{
+                //    //Console.WriteLine((data.ContainsKey(field) && data[field].Equals(value)) + " - " + data[field] + " - " + value.GetType() + " - " + data[field].GetType());
+                //}
+                //catch (Exception)
+                //{
+                //}
                 return op switch
                 {
                     "==" => data.ContainsKey(field) && data[field].Equals(value),
@@ -105,6 +105,18 @@ namespace Lucraft.Database.Query
                 condition = new Condition(query.Split(" ")[0], query.Split(" ")[1], value);
             }
             return condition;
+        }
+
+        public override string ToString()
+        {
+            if (type == 0)
+            {
+                return "Condition:{" + field + "," + op + "," + value + "}";
+            }
+            else
+            {
+                return "Condition:{" + con1.ToString() + "," + op + "," + con2.ToString() + "}";
+            }
         }
 
     }
