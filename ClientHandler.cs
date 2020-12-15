@@ -86,8 +86,7 @@ namespace Lucraft.Database
                     }
                     // All the data has been read from the client. Display it on the console.  
                     SimpleLogger.Log(Level.INFO, $"Read {content.Length} bytes from {client.Socket.RemoteEndPoint}. \n Data : {content}");
-                    // convert json string to Dictionary
-                    //var request = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
+
                     string response = new RequestHandler().HandleRequest(content);
                     // send response to client
                     Send(handler, response + "\n");
