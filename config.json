@@ -1,4 +1,5 @@
 ﻿{
   "port": 7864,
-  "fallback-port": 8934 
+  "maxconnections": 100,
+  "debug": false
 }
