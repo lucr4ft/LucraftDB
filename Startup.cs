@@ -6,12 +6,17 @@ namespace Lucraft.Database
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(Config config)
         {
-            Configuration = configuration;
+            Configuration = config;
         }
 
-        public IConfiguration Configuration { get; }
+        public Config Configuration { get; }
 
+        public void Configure(IEnvironment env)
+        {
+            if (env.IsDevelopment()) { }
+            SimpleLogger.Debug = Configuration.Debug || env.IsDevelopment();
+        }
     }
 }
