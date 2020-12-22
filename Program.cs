@@ -1,19 +1,32 @@
-﻿namespace Lucraft.Database
+﻿using Newtonsoft.Json;
+using System.IO;
+
+namespace Lucraft.Database
 {
     class Program
     {
         static void Main(string[] args)
         {
-            //string json = "{\"array\":[\"a\",\"b\"]}";
-            //Dictionary<string, object> data = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-            //Console.WriteLine(data["array"].GetType());
-            //JArray array = (JArray)data["array"];
-            //Console.WriteLine(array);
-            //foreach (JValue val in array)
-            //{
-            //    Console.WriteLine(val.Value.Equals("a"));
-            //}
-            //Console.WriteLine("* " + array.Contains(new JValue("a")));
+
+            IEnvironment env = new ProductionEnvironment();
+
+            if (args.Length > 0)
+            {
+                for (int i = 0; i < args.Length; i++)
+                {
+                    if (args[i].Equals("-e"))
+                    {
+                        if (i + 1 < args.Length && args[i+1].Equals("development"))
+                        {
+                            env = new DevlopmentEnvironment();
+                        }
+                    }
+                }
+            }
+
+            // load configuration
+            Startup startup = new Startup(JsonConvert.DeserializeObject<Config>(File.ReadAllText(Directory.GetCurrentDirectory() + "/config.json")));
+            startup.Configure(env: env);
 
             DatabaseServer.Instance.Start();
         }
