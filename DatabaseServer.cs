@@ -13,7 +13,6 @@ namespace Lucraft.Database
         public static readonly DatabaseServer Instance = new DatabaseServer();
 
         private readonly SocketServer SocketServer;
-        public List<Database> databases;
 
         private DatabaseServer()
         {
