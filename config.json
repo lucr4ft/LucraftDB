@@ -1,5 +1,10 @@
 ﻿{
   "port": 7864,
-  "maxconnections": 100,
-  "debug": false
+  "max-connections": 100,
+  "debug": false,
+  "data-options": {
+    "allow-memory-storage": false,
+    "allow-async-read": true,
+    "allow-async-write": false
+  }
 }
