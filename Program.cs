@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Lucraft.Database.Config;
+using Newtonsoft.Json;
 using System.IO;
 
 namespace Lucraft.Database
@@ -25,7 +26,7 @@ namespace Lucraft.Database
             }
 
             // load configuration
-            Startup startup = new Startup(JsonConvert.DeserializeObject<Config>(File.ReadAllText(Directory.GetCurrentDirectory() + "/config.json")));
+            Startup startup = new Startup(JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(Directory.GetCurrentDirectory() + "/config.json")));
             startup.Configure(env: env);
 
             DatabaseServer.Instance.Start();
