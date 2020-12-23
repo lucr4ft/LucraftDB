@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Lucraft.Database.Config;
 
 namespace Lucraft.Database
 {
     public class Startup
     {
-        public Startup(Config config)
+        public Startup(Configuration configuration)
         {
-            Configuration = config;
+            Configuration = configuration;
         }
 
-        public Config Configuration { get; }
+        public Configuration Configuration { get; }
 
         public void Configure(IEnvironment env)
         {

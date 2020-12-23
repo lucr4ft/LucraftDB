@@ -1,15 +1,12 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 
 namespace Lucraft.Database
 {
     public class ClientHandler
     {
-
         private readonly List<Client> ConnectedClients;
 
         public ClientHandler()
