@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Lucraft.Database.Config;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -8,7 +9,7 @@ namespace Lucraft.Database
     public class DatabaseServer
     {
         public static readonly string ROOT_PATH = Directory.GetCurrentDirectory();
-        public static readonly Config Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(ROOT_PATH + "/config.json"));
+        public static readonly Configuration Config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(ROOT_PATH + "/config.json"));
 
         public static readonly DatabaseServer Instance = new DatabaseServer();
 
