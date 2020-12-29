@@ -1,14 +1,14 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Lucraft.Database.Config
 {
     public class Configuration
     {
         public int Port { get; init; }
-        [JsonPropertyName("max-connections")]
+        [JsonProperty("max-connections")]
         public int MaxConnections { get; init; }
         public bool Debug { get; init; }
-        [JsonPropertyName("data-options")]
+        [JsonProperty("data-options")]
         public DataOptions DataOptions { get; init; }
     }
 }
