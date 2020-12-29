@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Lucraft.Database.Config;
+=======
+﻿using Lucraft.Database.Config;
+using System;
+>>>>>>> develop
 
 namespace Lucraft.Database
 {

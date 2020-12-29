@@ -1,20 +1,19 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Lucraft.Database
 {
     public class Document
     {
-        [JsonProperty("id")]
-        public string ID { get; set; }
-        [JsonIgnore]
-        public string Filename { get; set; }
+        public string ID { get; init; }
+        public string Filename { get; init; }
 
         private readonly object locker = new object();
 
-        [JsonProperty("data")]
-        private Dictionary<string, object> Data => GetData();
+        private Dictionary<string, object> Data { get; set; }
 
         public Document(string filename)
         {
@@ -22,18 +21,21 @@ namespace Lucraft.Database
             {
                 Filename = filename;
                 if (!File.Exists(filename))
-                {
                     File.Create(filename).Close();
-                }
+                else if (DatabaseServer.Config.DataOptions.AllowMemoryStorage)
+                    Data = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(Filename));
+                Console.WriteLine("Loaded Document: " + filename);
             }
-            
         }
 
         public Dictionary<string, object> GetData()
         {
             lock (locker)
             {
-                return JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(Filename)); // data;
+                if (DatabaseServer.Config.DataOptions.AllowMemoryStorage)
+                    return Data;
+                else
+                    return JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(Filename)); // data;
             }
         }
 
@@ -41,8 +43,18 @@ namespace Lucraft.Database
         {
             lock (locker)
             {
-                //this.data = data;
-                File.WriteAllText(Filename, JsonConvert.SerializeObject(data));
+                if (DatabaseServer.Config.DataOptions.AllowMemoryStorage)
+                {
+                    this.Data = data;
+                    new Task(() =>
+                    {
+                        File.WriteAllText(Filename, JsonConvert.SerializeObject(data));
+                    }).Start();
+                }
+                else
+                {
+                    File.WriteAllText(Filename, JsonConvert.SerializeObject(data));
+                }
             }
         }
     }
