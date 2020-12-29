@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Lucraft.Database.Model
+namespace Lucraft.Database.Models
 {
     public class DocumentResponseModel
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lucraft.Database.Model
+namespace Lucraft.Database.Models
 {
     public class CollectionResponseModel
     {
