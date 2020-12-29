@@ -1,9 +1,8 @@
-﻿using Lucraft.Database.Query;
+﻿using Lucraft.Database.Models;
+using Lucraft.Database.Query;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 
 namespace Lucraft.Database
 {
@@ -16,7 +15,7 @@ namespace Lucraft.Database
             Dictionary<string, object> response = new Dictionary<string, object>();
 
             string path = request.Split(" ")[1];
-            string[] pathSplit = path.Substring(1).Split("/");
+            string[] pathSplit = path[1..].Split("/");
 
             Database db = Databases.GetDatabase(pathSplit[0]);
             if (db == null)
@@ -62,14 +61,17 @@ namespace Lucraft.Database
                     }
                     else if (document == null)
                     {
-                        response["exists"] = false;
-                        response["data"] = null;
+                        return JsonConvert.SerializeObject(new ErrorResponseModel { Error = $"Document with ID {pathSplit[2]} does not exist" });
+                        //response["exists"] = false;
+                        //response["data"] = null;
                     }
                     else
                     {
-                        response["id"] = document.ID;
-                        response["exists"] = true;
-                        response["data"] = document.GetData();
+                        //Console.WriteLine(JsonConvert.SerializeObject(new DocumentModel { ID = document.ID, Exists = true, Data = document.GetData() }));
+                        //response["id"] = document.ID;
+                        //response["exists"] = true;
+                        //response["data"] = document.GetData();
+                        return JsonConvert.SerializeObject(new DocumentResponseModel { ID = document.ID, Exists = true, Data = document.GetData() });
                     }
                     break;
                 case "set":
