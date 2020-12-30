@@ -1,14 +1,12 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lucraft.Database.Models
 {
-    public class CollectionResponseModel
+    public class CollectionResponseModel : ResponseModel
     {
+        [JsonProperty("id")]
+        public string ID { get; init; }
         [JsonProperty("documents")]
         public List<DocumentResponseModel> Documents { get; init; }
     }
