@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Lucraft.Database.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Lucraft.Database
 {
@@ -10,6 +10,13 @@ namespace Lucraft.Database
         public string ID { get; set; }
         public string Path { get; set; }
         public List<Document> Documents { get; set; }
+
+        public CollectionResponseModel GetModel()
+        {
+            List<DocumentResponseModel> documentModels = new List<DocumentResponseModel>();
+            Documents.ForEach((Document doc) => documentModels.Add(doc.GetModel()));
+            return new CollectionResponseModel { ID = this.ID, Documents = documentModels };
+        }
 
         public Document GetDocument(string id)
         {
@@ -39,8 +46,8 @@ namespace Lucraft.Database
                 try
                 {
                     File.Delete(Path + "/" + id + ".db");
-                    error = null;
                     Documents.Remove(document);
+                    error = null;
                     return true;
                 }
                 catch (Exception e)

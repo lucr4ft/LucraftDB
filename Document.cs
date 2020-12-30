@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Lucraft.Database.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,6 +15,8 @@ namespace Lucraft.Database
         private readonly object locker = new object();
 
         private Dictionary<string, object> Data { get; set; }
+
+        public DocumentResponseModel GetModel() => new DocumentResponseModel { ID = ID, Exists = true, Data = GetData() };
 
         public Document(string filename)
         {
@@ -45,7 +48,7 @@ namespace Lucraft.Database
             {
                 if (DatabaseServer.Config.DataOptions.AllowMemoryStorage)
                 {
-                    this.Data = data;
+                    Data = data;
                     new Task(() =>
                     {
                         File.WriteAllText(Filename, JsonConvert.SerializeObject(data));
