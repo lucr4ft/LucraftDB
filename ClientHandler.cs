@@ -84,7 +84,7 @@ namespace Lucraft.Database
                     // All the data has been read from the client. Display it on the console.  
                     SimpleLogger.Log(Level.INFO, $"Read {content.Length} bytes from {client.Socket.RemoteEndPoint}.");
                     SimpleLogger.Log(Level.DEBUG, $"Data read : {content}");
-                    string response = new RequestHandler().HandleRequest(content);
+                    string response = RequestHandler.HandleRequest(content);
                     SimpleLogger.Log(Level.DEBUG, $"Data sent : {response}");
                     // send response to client
                     Send(handler, response + "\n");

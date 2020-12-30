@@ -14,10 +14,13 @@ namespace Lucraft.Database.Config
     {
         [JsonProperty("allow-memory-storage")]
         public bool AllowMemoryStorage { get; init; }
+<<<<<<< HEAD
         [JsonProperty("allow-async-read")]
         public bool AllowAsyncRead { get; init; }
         [JsonProperty("allow-async-write")]
 >>>>>>> develop
         public bool AllowAsyncWrite { get; init; }
+=======
+>>>>>>> develop
     }
 }

@@ -5,7 +5,10 @@ using System.Text;
 using Lucraft.Database.Config;
 =======
 ﻿using Lucraft.Database.Config;
+<<<<<<< HEAD
 using System;
+>>>>>>> develop
+=======
 >>>>>>> develop
 
 namespace Lucraft.Database
