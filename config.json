@@ -1,8 +1,17 @@
 ﻿{
   "port": 7864,
+<<<<<<< HEAD
+  "maxconnections": 100,
+  "debug": false,
+  "data-options": {
+    "allow-memory-storage": false,
+    "allow-async-read": true,
+    "allow-async-write": false
+=======
   "max-connections": 20,
   "debug": false,
   "data-options": {
     "allow-memory-storage": true
+>>>>>>> develop
   }
 }
