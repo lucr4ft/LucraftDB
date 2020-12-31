@@ -27,7 +27,7 @@ namespace Lucraft.Database
                     File.Create(filename).Close();
                 else if (DatabaseServer.Config.DataOptions.AllowMemoryStorage)
                     Data = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(Filename));
-                Console.WriteLine("Loaded Document: " + filename);
+                SimpleLogger.Log(Level.DEBUG, $"Loaded document: {filename}");
             }
         }
 
