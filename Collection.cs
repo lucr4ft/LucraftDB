@@ -30,6 +30,21 @@ namespace Lucraft.Database
 
         public Document CreateDocument(string id)
         {
+            if (id.Equals("*"))
+            {
+                SimpleLogger.Log(Level.DEBUG, "generating random id");
+                id = Utilities.GetRandomID();
+                // i dont know if the id will ever repeat itself
+                // this is just a safety meassure
+                // to make sure no data is overwritten,
+                // because the id aready existed
+                while (GetDocument(id) != null)
+                {
+                    SimpleLogger.Log(Level.DEBUG, "random id already in use");
+                    SimpleLogger.Log(Level.DEBUG, "generating new random id");
+                    id = Utilities.GetRandomID();
+                }
+            }
             Document document = new Document(Path + "/" + id + ".db")
             {
                 ID = id
