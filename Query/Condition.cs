@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Lucraft.Database.Query
 {
@@ -34,19 +30,9 @@ namespace Lucraft.Database.Query
 
         public bool Check(Document document)
         {
-            //Console.WriteLine("Type: " + type);
             if (type == 0)
             {
-                //Console.WriteLine(field + " - " + op + " - " + value);
-
                 Dictionary<string, object> data = document.GetData();
-                //try
-                //{
-                //    //Console.WriteLine((data.ContainsKey(field) && data[field].Equals(value)) + " - " + data[field] + " - " + value.GetType() + " - " + data[field].GetType());
-                //}
-                //catch (Exception)
-                //{
-                //}
                 return op switch
                 {
                     "==" => data.ContainsKey(field) && data[field].Equals(value),
@@ -70,53 +56,46 @@ namespace Lucraft.Database.Query
             }
         }
 
-        private bool Contains(JArray array, object value)
+        private static bool Contains(JArray array, object value)
         {
             foreach (JValue val in array)
-            {
-                if (val.Value.Equals(value)) return true;
-                //Console.WriteLine(val.Value.Equals("a"));
-            }
+                if (val.Value.Equals(value)) 
+                    return true;
             return false;
         }
 
-        public static Condition GetCondition(string query)
-        {
-            Condition condition;
+        //public static Condition GetCondition(string query)
+        //{
+        //    Condition condition;
 
-            if (query.Contains("&&"))
-            {
-                condition = new Condition(GetCondition(query.Split("&&")[0]), "&&", GetCondition(query.Substring(query.Split("&&")[0].Length + 2)));
-            }
-            else if (query.Contains("||"))
-            {
-                condition = new Condition(GetCondition(query.Split("||")[0]), "||", GetCondition(query.Substring(query.Split("||")[0].Length + 2)));
-            }
-            else
-            {
-                object value;
-                string valueStr = query.Substring(query.Split(" ")[0].Length + query.Split(" ")[1].Length + 2);
+        //    if (query.Contains("&&"))
+        //    {
+        //        condition = new Condition(GetCondition(query.Split("&&")[0]), "&&", GetCondition(query.Substring(query.Split("&&")[0].Length + 2)));
+        //    }
+        //    else if (query.Contains("||"))
+        //    {
+        //        condition = new Condition(GetCondition(query.Split("||")[0]), "||", GetCondition(query.Substring(query.Split("||")[0].Length + 2)));
+        //    }
+        //    else
+        //    {
+        //        object value;
+        //        string valueStr = query.Substring(query.Split(" ")[0].Length + query.Split(" ")[1].Length + 2);
 
-                if (long.TryParse(valueStr, out long l)) value = l;
-                else if (bool.TryParse(valueStr, out bool b)) value = b;
-                else if (valueStr.Equals("null")) value = null;
-                else value = valueStr;
+        //        if (long.TryParse(valueStr, out long l)) value = l;
+        //        else if (bool.TryParse(valueStr, out bool b)) value = b;
+        //        else if (valueStr.Equals("null")) value = null;
+        //        else value = valueStr;
 
-                condition = new Condition(query.Split(" ")[0], query.Split(" ")[1], value);
-            }
-            return condition;
-        }
+        //        condition = new Condition(query.Split(" ")[0], query.Split(" ")[1], value);
+        //    }
+        //    return condition;
+        //}
 
         public override string ToString()
         {
             if (type == 0)
-            {
                 return "Condition:{" + field + "," + op + "," + value + "}";
-            }
-            else
-            {
-                return "Condition:{" + con1.ToString() + "," + op + "," + con2.ToString() + "}";
-            }
+            return "Condition:{" + con1.ToString() + "," + op + "," + con2.ToString() + "}";
         }
 
     }
