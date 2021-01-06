@@ -7,7 +7,8 @@ namespace Lucraft.Database.Query
     {
         public static QueryResponseModel HandleQuery(Collection collection, string query)
         {
-            Condition condition = Condition.GetCondition(query);
+            //Condition condition = Condition.GetCondition(query);
+            Condition condition = ConditionParser.GetCondition(query);
             SimpleLogger.Log(Level.DEBUG, condition.ToString());
             List<DocumentResponseModel> matchingDocs = new List<DocumentResponseModel>();
             collection.Documents.ForEach(delegate (Document doc)
