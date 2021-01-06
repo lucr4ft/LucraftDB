@@ -71,16 +71,16 @@ namespace Lucraft.Database
                 if (content.IndexOf("\u0017") > -1)
                 {
                     content = content[0..^1];
-                    if (content.Equals("\u0004"))
-                    {
-                        string remoteEndPoint = client.Socket.RemoteEndPoint.ToString();
-                        SimpleLogger.Log(Level.INFO, $"Closing connetion to {remoteEndPoint}");
-                        client.Socket.Shutdown(SocketShutdown.Both);
-                        client.Socket.Close();
-                        ConnectedClients.Remove(client);
-                        SimpleLogger.Log(Level.INFO, $"Closed connetion to {remoteEndPoint}");
-                        return;
-                    }
+                    //if (content.Equals("\u0004"))
+                    //{
+                    //    string remoteEndPoint = client.Socket.RemoteEndPoint.ToString();
+                    //    SimpleLogger.Log(Level.INFO, $"Closing connetion to {remoteEndPoint}");
+                    //    client.Socket.Shutdown(SocketShutdown.Both);
+                    //    client.Socket.Close();
+                    //    ConnectedClients.Remove(client);
+                    //    SimpleLogger.Log(Level.INFO, $"Closed connetion to {remoteEndPoint}");
+                    //    return;
+                    //}
                     // All the data has been read from the client. Display it on the console.  
                     SimpleLogger.Log(Level.INFO, $"Read {content.Length} bytes from {client.Socket.RemoteEndPoint}.");
                     SimpleLogger.Log(Level.DEBUG, $"Data read : {content}");
