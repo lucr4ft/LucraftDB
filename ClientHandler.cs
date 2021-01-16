@@ -87,7 +87,7 @@ namespace Lucraft.Database
                     string response = RequestHandler.HandleRequest(content);
                     SimpleLogger.Log(Level.DEBUG, $"Data sent : {response}");
                     // send response to client
-                    Send(handler, response + "\n");
+                    Send(handler, response);
 
                     // remove data from cache
                     client.StringBuilder.Clear();
