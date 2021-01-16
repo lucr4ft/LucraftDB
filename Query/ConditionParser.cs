@@ -9,7 +9,7 @@ namespace Lucraft.Database.Query
     {
         public static List<Token> GetTokens(string condition)
         {
-            List<Token> tokens = new List<Token>();
+            List<Token> tokens = new();
             string[] chars = condition.ToCharArray().Select(c => c.ToString()).ToArray();
             for (int i = 0; i < chars.Length; i++)
             {
