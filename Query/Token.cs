@@ -13,14 +13,14 @@
         IsNotEqualTo,
         IsLessThan,
         IsLessOrEqualTo,
-        IsGreatherThan,
-        IsGreatherOrEqualTo,
-        Contains,
+        IsGreaterThan,
+        IsGreaterOrEqualTo,
+        Contains,               // Todo: add to parser
         And,
         Or
     }
 
-    public struct Token
+    public readonly struct Token
     {
         public readonly TokenType TokenType;
         public readonly object Value;
@@ -33,7 +33,7 @@
 
         public override string ToString()
         {
-            return "Type: " + TokenType.ToString() + "; Value: " + Value;
+            return "Type: " + TokenType + "; Value: " + Value;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Lucraft.Database
         {
             List<DocumentResponseModel> documentModels = new List<DocumentResponseModel>();
             Documents.ForEach((Document doc) => documentModels.Add(doc.GetModel()));
-            return new CollectionResponseModel { ID = this.ID, Documents = documentModels };
+            return new CollectionResponseModel { Id = this.ID, Documents = documentModels };
         }
 
         public Document GetDocument(string id)
@@ -32,17 +32,17 @@ namespace Lucraft.Database
         {
             if (id.Equals("*"))
             {
-                SimpleLogger.Log(Level.DEBUG, "generating random id");
-                id = Utilities.GetRandomID();
+                SimpleLogger.Log(Level.Debug, "generating random id");
+                id = Utilities.GetRandomId();
                 // i dont know if the id will ever repeat itself
                 // this is just a safety meassure
                 // to make sure no data is overwritten,
                 // because the id aready existed
                 while (GetDocument(id) != null)
                 {
-                    SimpleLogger.Log(Level.DEBUG, "random id already in use");
-                    SimpleLogger.Log(Level.DEBUG, "generating new random id");
-                    id = Utilities.GetRandomID();
+                    SimpleLogger.Log(Level.Debug, "random id already in use");
+                    SimpleLogger.Log(Level.Debug, "generating new random id");
+                    id = Utilities.GetRandomId();
                 }
             }
             Document document = new Document(Path + "/" + id + ".db")

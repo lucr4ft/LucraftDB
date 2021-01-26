@@ -6,7 +6,7 @@ namespace Lucraft.Database.Models
     public class DocumentResponseModel : ResponseModel
     {
         [JsonProperty("id")]
-        public string ID { get; init; }
+        public string Id { get; init; }
         [JsonProperty("exists")]
         public bool Exists { get; init; }
         [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]

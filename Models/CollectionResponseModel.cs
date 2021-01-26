@@ -6,7 +6,7 @@ namespace Lucraft.Database.Models
     public class CollectionResponseModel : ResponseModel
     {
         [JsonProperty("id")]
-        public string ID { get; init; }
+        public string Id { get; init; }
         [JsonProperty("documents")]
         public List<DocumentResponseModel> Documents { get; init; }
     }
