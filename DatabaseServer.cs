@@ -13,7 +13,7 @@ namespace Lucraft.Database
         public static readonly string ROOT_PATH = Directory.GetCurrentDirectory();
         public static readonly Configuration Config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(ROOT_PATH + "/config.json"));
 
-        public static readonly SemanticVersion MinimumClientVersion = SemanticVersion.Parse("1.0.2-rc1");
+        public static readonly SemanticVersion MinimumClientVersion = SemanticVersion.Parse("1.1.1");
 
         public static readonly DatabaseServer Instance = new();
 
