@@ -5,6 +5,9 @@
 
 Properties/
 
+# JetBrains Rider
+.idea/
+
 # User-specific files
 *.rsuser
 *.suo
