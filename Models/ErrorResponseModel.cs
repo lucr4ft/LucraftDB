@@ -6,5 +6,7 @@ namespace Lucraft.Database.Models
     {
         [JsonProperty("error")]
         public string Error { get; init; }
+        [JsonProperty("error-message")]
+        public string ErrorMessage { get; init; }
     }
 }
