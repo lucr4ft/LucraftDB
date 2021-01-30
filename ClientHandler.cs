@@ -1,6 +1,5 @@
 ﻿using Lucraft.Database.Models;
 using Newtonsoft.Json;
-using NuGet.Versioning;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
@@ -19,25 +18,17 @@ namespace Lucraft.Database
 
         #region Utility Methods
 
-        public bool AuthenticateClient(Client client)
-        {
-            SemanticVersion client_version = SemanticVersion.Parse("1.1.1");
-            
-            if (client.Version < DatabaseServer.MinimumClientVersion)
-            {
-                client.Disconnect(JsonConvert.SerializeObject(new ExceptionResponseModel { 
-                    Exception = "lucraft.database.exception.outdated_client",
-                    ExceptionMessage = $"client needs AT LEAST version {DatabaseServer.MinimumClientVersion} to connect to this server"
-                }));
-                //client.Disconnect("{\"error\": \"lucraft.database.exception.outdated_client\", \"error-message\": \"The client needs AT LEAST version}");
-                return false;
-            }
-            return true;
-        }
-
         public void Add(Client client)
         {
-            if (AuthenticateClient(client))
+            if (client.Version < DatabaseServer.MinimumClientVersion)
+            {
+                client.Disconnect(JsonConvert.SerializeObject(new ErrorResponseModel
+                {
+                    Error = "lucraft.database.exception.outdated_client",
+                    ErrorMessage = $"client needs AT LEAST version {DatabaseServer.MinimumClientVersion} to connect to this server"
+                }));
+            }
+            else
             {
                 ConnectedClients.Add(client);
                 client.Socket.BeginReceive(client.Buffer, 0, Client.BufferSize, 0, new AsyncCallback(ReadCallback), client);
