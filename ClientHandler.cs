@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Lucraft.Database.Models;
+using Newtonsoft.Json;
+using NuGet.Versioning;
+using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
@@ -16,10 +19,29 @@ namespace Lucraft.Database
 
         #region Utility Methods
 
+        public bool AuthenticateClient(Client client)
+        {
+            SemanticVersion client_version = SemanticVersion.Parse("1.1.1");
+            
+            if (client.Version < DatabaseServer.MinimumClientVersion)
+            {
+                client.Disconnect(JsonConvert.SerializeObject(new ExceptionResponseModel { 
+                    Exception = "lucraft.database.exception.outdated_client",
+                    ExceptionMessage = $"client needs AT LEAST version {DatabaseServer.MinimumClientVersion} to connect to this server"
+                }));
+                //client.Disconnect("{\"error\": \"lucraft.database.exception.outdated_client\", \"error-message\": \"The client needs AT LEAST version}");
+                return false;
+            }
+            return true;
+        }
+
         public void Add(Client client)
         {
-            ConnectedClients.Add(client);
-            client.Socket.BeginReceive(client.Buffer, 0, Client.BufferSize, 0, new AsyncCallback(ReadCallback), client);
+            if (AuthenticateClient(client))
+            {
+                ConnectedClients.Add(client);
+                client.Socket.BeginReceive(client.Buffer, 0, Client.BufferSize, 0, new AsyncCallback(ReadCallback), client);
+            }
         }
 
         public void DisconnectAll()
@@ -59,7 +81,7 @@ namespace Lucraft.Database
             }
             catch (Exception)
             {
-                SimpleLogger.Log(Level.WARN, "Connection was interrupted");
+                SimpleLogger.Log(Level.Warn, "Connection was interrupted");
                 ConnectedClients.Remove(client);
                 return;
             }
@@ -71,23 +93,13 @@ namespace Lucraft.Database
                 if (content.IndexOf("\u0017") > -1)
                 {
                     content = content[0..^1];
-                    if (content.Equals("\u0004"))
-                    {
-                        string remoteEndPoint = client.Socket.RemoteEndPoint.ToString();
-                        SimpleLogger.Log(Level.INFO, $"Closing connetion to {remoteEndPoint}");
-                        client.Socket.Shutdown(SocketShutdown.Both);
-                        client.Socket.Close();
-                        ConnectedClients.Remove(client);
-                        SimpleLogger.Log(Level.INFO, $"Closed connetion to {remoteEndPoint}");
-                        return;
-                    }
                     // All the data has been read from the client. Display it on the console.  
-                    SimpleLogger.Log(Level.INFO, $"Read {content.Length} bytes from {client.Socket.RemoteEndPoint}.");
-                    SimpleLogger.Log(Level.DEBUG, $"Data read : {content}");
+                    SimpleLogger.Log(Level.Info, $"Read {content.Length} bytes from {client.Socket.RemoteEndPoint}.");
+                    SimpleLogger.Log(Level.Debug, $"Data read : {content}");
                     string response = RequestHandler.HandleRequest(content);
-                    SimpleLogger.Log(Level.DEBUG, $"Data sent : {response}");
+                    SimpleLogger.Log(Level.Debug, $"Data sent : {response}");
                     // send response to client
-                    Send(handler, response + "\n");
+                    Send(handler, response);
 
                     // remove data from cache
                     client.StringBuilder.Clear();
@@ -108,7 +120,7 @@ namespace Lucraft.Database
             { 
                 Socket handler = (Socket)ar.AsyncState;
                 int bytesSent = handler.EndSend(ar);
-                SimpleLogger.Log(Level.INFO, $"Sent {bytesSent} bytes to client.");
+                SimpleLogger.Log(Level.Info, $"Sent {bytesSent} bytes to client.");
             }
             catch (Exception e)
             {

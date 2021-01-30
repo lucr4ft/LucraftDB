@@ -9,7 +9,7 @@ namespace Lucraft.Database
             Configuration = configuration;
         }
 
-        public Configuration Configuration { get; }
+        private Configuration Configuration { get; }
 
         public void Configure(IEnvironment env)
         {

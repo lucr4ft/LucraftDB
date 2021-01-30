@@ -4,9 +4,9 @@ using System.IO;
 
 namespace Lucraft.Database
 {
-    class Program
+    public static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
 
             IEnvironment env = new ProductionEnvironment();
@@ -19,7 +19,7 @@ namespace Lucraft.Database
                     {
                         if (i + 1 < args.Length && args[i+1].Equals("development"))
                         {
-                            env = new DevlopmentEnvironment();
+                            env = new DevelopmentEnvironment();
                         }
                     }
                 }

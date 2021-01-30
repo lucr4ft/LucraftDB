@@ -16,7 +16,7 @@ namespace Lucraft.Database
 
         private Dictionary<string, object> Data { get; set; }
 
-        public DocumentResponseModel GetModel() => new DocumentResponseModel { ID = ID, Exists = true, Data = GetData() };
+        public DocumentResponseModel GetModel() => new DocumentResponseModel { Id = ID, Exists = true, Data = GetData() };
 
         public Document(string filename)
         {
@@ -27,7 +27,7 @@ namespace Lucraft.Database
                     File.Create(filename).Close();
                 else if (DatabaseServer.Config.DataOptions.AllowMemoryStorage)
                     Data = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(Filename));
-                SimpleLogger.Log(Level.DEBUG, $"Loaded document: {filename}");
+                SimpleLogger.Log(Level.Debug, $"Loaded document: {filename}");
             }
         }
 

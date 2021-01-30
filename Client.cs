@@ -1,19 +1,20 @@
-﻿using System;
+﻿using NuGet.Versioning;
+using System;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
 namespace Lucraft.Database
 {
-
     public class Client
     {
-
         public Socket Socket { get; }
+
+        public SemanticVersion Version { get; init; }
 
         public const int BufferSize = 1024;
         public byte[] Buffer = new byte[BufferSize];
-        public StringBuilder StringBuilder = new StringBuilder();
+        public StringBuilder StringBuilder = new();
 
         public Client(Socket handler)
         {
@@ -45,13 +46,12 @@ namespace Lucraft.Database
             try
             {
                 int bytesSent = Socket.EndSend(ar);
-                SimpleLogger.Log(Level.INFO, $"Sent {bytesSent} bytes to client.");
+                SimpleLogger.Log(Level.Info, $"Sent {bytesSent} bytes to client.");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
         }
-
     }
 }
