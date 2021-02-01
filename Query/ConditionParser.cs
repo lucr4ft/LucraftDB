@@ -3,14 +3,49 @@ using System.Collections.Generic;
 
 namespace Lucraft.Database.Query
 {
-    public static class ConditionParser
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class ConditionParser
     {
-        public static Condition GetCondition(string condition)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public static Condition Parse(string condition)
         {
             List<Token> tokens = ConditionLexer.GetTokens(condition);
             return EvalParenthesis(tokens.GetRange(1, tokens.Count - 2));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="conditionString"></param>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public static bool TryParse(string conditionString, out Condition condition)
+        {
+            try
+            {
+                condition = Parse(conditionString);
+                if (condition is null)
+                    return false;
+                return true;
+            }
+            catch (Exception)
+            {
+                condition = null;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tokens"></param>
+        /// <returns></returns>
         private static Condition EvalParenthesis(IReadOnlyList<Token> tokens)
         {
             List<object> list = new();
