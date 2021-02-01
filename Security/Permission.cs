@@ -9,17 +9,14 @@ namespace Lucraft.Database.Security
     /// <summary>
     /// 
     /// </summary>
-    public enum Permissions
+    public enum Permission
     {
         Read,
         Write,
-        ReadWrite
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class Permission
-    {
+        Get,
+        List,
+        Create,
+        Update,
+        Delete
     }
 }
