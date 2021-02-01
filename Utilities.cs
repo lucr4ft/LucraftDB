@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lucraft.Database
 {
-    public static class Utilities
+    public sealed class Utilities
     {
         public static string GetRandomId() => Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("=", "").Replace("/", "").Replace("+", "");
     }
