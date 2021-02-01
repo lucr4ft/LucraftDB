@@ -11,6 +11,14 @@ namespace Lucraft.Database.Security.Rules
     /// </summary>
     public class Rule
     {
-        public string Name { get; init; }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public bool Evaluate(Request request)
+        {
+            return false;
+        }
     }
 }
