@@ -1,57 +1,76 @@
 ﻿using NuGet.Versioning;
 using System;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Lucraft.Database
 {
-    public class Client
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class Client
     {
-        public Socket Socket { get; }
+        public readonly Socket socket;
+        private readonly NetworkStream _stream;
+        private readonly StreamReader _reader;
+        private readonly StreamWriter _writer;
 
-        public SemanticVersion Version { get; init; }
-
-        public const int BufferSize = 1024;
-        public byte[] Buffer = new byte[BufferSize];
-        public StringBuilder StringBuilder = new();
-
-        public Client(Socket handler)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="socket"></param>
+        public Client(Socket socket)
         {
-            Socket = handler;
+            this.socket = socket;
+            _stream = new NetworkStream(socket);
+            _reader = new StreamReader(_stream);
+            _writer = new StreamWriter(_stream) { AutoFlush = true };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string ReadLine() => _reader.ReadLine();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> ReadLineAsync() => await _reader.ReadLineAsync();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="s"></param>
+        public void SendLine(string s) => _writer.Write($"{s}\n");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public async Task SendLineAsync(string s) => await _writer.WriteAsync($"{s}\n");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Disconnect() => Disconnect("connection closed by server");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="msg">Disconnect Message</param>
         public void Disconnect(string msg)
         {
-            Send(msg);
-            Console.WriteLine($"[{Thread.CurrentThread.Name}{DateTime.Now}] Closing connection to [{ Socket.RemoteEndPoint}]");
-            Socket.Shutdown(SocketShutdown.Both);
-            Socket.Close();
+            SendLine(msg);
+            Console.WriteLine($"[{Thread.CurrentThread.Name}{DateTime.Now}] Closing connection to [{ socket.RemoteEndPoint}]");
+            socket.Shutdown(SocketShutdown.Both);
+            socket.Close();
             Console.WriteLine($"[{Thread.CurrentThread.Name}{DateTime.Now}] Connection closed successful");
-        }
-
-        public void Disconnect()
-        {
-            Disconnect("connection closed by server");
-        }
-
-        private void Send(string data)
-        {
-            byte[] byteData = Encoding.Unicode.GetBytes(data);
-            Socket.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), null);
-        }
-
-        private void SendCallback(IAsyncResult ar)
-        {
-            try
-            {
-                int bytesSent = Socket.EndSend(ar);
-                SimpleLogger.Log(Level.Info, $"Sent {bytesSent} bytes to client.");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
         }
     }
 }
