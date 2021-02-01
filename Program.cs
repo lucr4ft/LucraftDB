@@ -8,16 +8,14 @@ namespace Lucraft.Database
     {
         private static void Main(string[] args)
         {
-
             IEnvironment env = new ProductionEnvironment();
-
             if (args.Length > 0)
             {
                 for (int i = 0; i < args.Length; i++)
                 {
                     if (args[i].Equals("-e"))
                     {
-                        if (i + 1 < args.Length && args[i+1].Equals("development"))
+                        if (i + 1 < args.Length && args[i + 1].Equals("development"))
                         {
                             env = new DevelopmentEnvironment();
                         }
