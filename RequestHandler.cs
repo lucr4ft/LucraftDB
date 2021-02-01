@@ -1,7 +1,6 @@
 ﻿using Lucraft.Database.Models;
 using Lucraft.Database.Query;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 
 namespace Lucraft.Database
@@ -16,13 +15,11 @@ namespace Lucraft.Database
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public static string HandleRequest(string request)
+        public static string HandleRequest(Request request)
         {
-            string requestType = request.Split(" ")[0];
-            ResponseModel response;
+            ResponseModel response = null;
 
-            string path = request.Split(" ")[1];
-            string[] pathSplit = path[1..].Split("/");
+            string[] pathSplit = request.Path[1..].Split("/");
 
             // get database
             Database db = Databases.GetDatabase(pathSplit[0]);
@@ -37,40 +34,68 @@ namespace Lucraft.Database
             // get document
             Document document = collection.GetDocument(pathSplit[2]);
 
-            switch (requestType)
+            switch (request.Type)
             {
-                case "get":
+                case RequestType.Get:
+                    // deprecated: use RequestType.List instead
+                    // will be removed in future version
+                    // see RequestType.List
                     if (pathSplit[2] == "*")
                     {
-                        if (requestType.Length + path.Length + 1 == request.Length)
+                        // see RequestType.List
+                        if (request.Condition is null)
                             response = collection.GetModel();
+                        // see RequestType.List
                         else
-                            response = QueryHandler.HandleQuery(
-                                    collection: collection,
-                                    query: request.Split(" where ")[1]);
+                            response = QueryHandler.HandleQuery(collection, request.Condition);
                         break;
                     }
                     else if (document == null)
+                        // document does not exist 
+                        // -> return empty/non-existend document
                         response = new DocumentResponseModel { Id = pathSplit[2], Exists = false, Data = null };
                     else
-                        response = document.GetModel();//new DocumentModel { ID = document.ID, Exists = true, Data = document.GetData() };
+                        // document exists
+                        // -> return document model
+                        response = document.GetModel();
                     break;
-                case "set":
+                case RequestType.List:
+                    if (request.Condition is null)
+                        // no condition is specified
+                        // return model of the collection
+                        response = collection.GetModel();
+                    else
+                        // request contains a condition
+                        // -> evalute condition
+                        response = QueryHandler.HandleQuery(collection, request.Condition);
+                    break;
+                case RequestType.Set:
+                    // if document is null
+                    // then create new document
                     document ??= collection.CreateDocument(pathSplit[2]);
-                    string data = request[(requestType.Length + path.Length + 2)..];
-                    document.SetData(JsonConvert.DeserializeObject<Dictionary<string, object>>(data));
-                    // Todo: return Success-model + write-time
+                    // set data of the document
+                    document.SetData(JsonConvert.DeserializeObject<Dictionary<string, object>>(request.Data));
+// TODO: return Success-model + write-time
                     response = new ErrorResponseModel { Error = "ResponseModel not created yet!" };
                     break;
-                case "delete":
+                case RequestType.Delete:
+                    // delete document
+                    // if an error occures during deletion
+                    // error will contain the error
+                    // else error will be null
                     collection.DeleteDocument(pathSplit[2], out string error);
-                    response = error != null ? new ErrorResponseModel { Error = error } : new ErrorResponseModel { Error = "ResponseModel not created yet!" };
+                    response = new ErrorResponseModel { Error = error ?? "ResponseModel not created yet!" };
                     break;
                 default:
-                    response = new ErrorResponseModel { Error = $"{requestType} requests are currently not supported!" };
                     break;
             }
-            return JsonConvert.SerializeObject(response ?? new ErrorResponseModel { Error = "An error occurred handling the request!" });
+            // return response model
+            // if response is null 
+            // then return new ErrorResponseModel
+            return JsonConvert.SerializeObject(response ?? new ErrorResponseModel { 
+                Error = "lucraft.database.exception", 
+                ErrorMessage = "An unknown error occured handling the request #1" 
+            });
         }
     }
 }

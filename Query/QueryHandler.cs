@@ -14,14 +14,13 @@ namespace Lucraft.Database.Query
         /// 
         /// </summary>
         /// <param name="collection"></param>
-        /// <param name="query"></param>
+        /// <param name="condition"></param>
         /// <returns></returns>
-        public static QueryResponseModel HandleQuery(Collection collection, string query)
+        public static QueryResponseModel HandleQuery(Collection collection, Condition condition)
         {
-            Condition condition = ConditionParser.Parse(query);
             SimpleLogger.Log(Debug, condition.ToString());
-            List<DocumentResponseModel> matchingDocs = (from document 
-                                                        in collection.Documents 
+            List<DocumentResponseModel> matchingDocs = (from document
+                                                        in collection.Documents
                                                         where condition.Check(document)
                                                         select document.GetModel()).ToList();
             return new QueryResponseModel { Documents = matchingDocs };
