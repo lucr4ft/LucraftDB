@@ -6,8 +6,16 @@ using System.Collections.Generic;
 
 namespace Lucraft.Database
 {
-    public static class RequestHandler
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class RequestHandler
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public static string HandleRequest(string request)
         {
             string requestType = request.Split(" ")[0];
