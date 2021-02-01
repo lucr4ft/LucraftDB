@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Lucraft.Database
@@ -11,10 +8,6 @@ namespace Lucraft.Database
         public string Id { get; init; }
         public List<Collection> Collections { get; init; }
 
-        public Collection GetCollection(string id)
-        {
-            return Collections.FirstOrDefault(collection => collection.ID == id);
-        }
-
+        public Collection GetCollection(string id) => Collections.FirstOrDefault(collection => collection.ID == id);
     }
 }
