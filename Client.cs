@@ -1,4 +1,5 @@
-﻿using NuGet.Versioning;
+﻿using Lucraft.Database.Security;
+using NuGet.Versioning;
 using System;
 using System.IO;
 using System.Net.Sockets;
@@ -13,6 +14,8 @@ namespace Lucraft.Database
     /// </summary>
     public sealed class Client
     {
+        public Permission Permission { get; init; }
+
         public readonly Socket socket;
         private readonly NetworkStream _stream;
         private readonly StreamReader _reader;
