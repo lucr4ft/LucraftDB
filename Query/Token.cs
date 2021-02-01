@@ -1,5 +1,8 @@
 ﻿namespace Lucraft.Database.Query
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public enum TokenType
     {
         Identifier,             // identifier
@@ -20,11 +23,19 @@
         Or
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public readonly struct Token
     {
         public readonly TokenType TokenType;
         public readonly object Value;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="value"></param>
         public Token(TokenType type, object value)
         {
             TokenType = type;

@@ -16,8 +16,10 @@ namespace Lucraft.Database
 
         private Dictionary<string, object> Data { get; set; }
 
-        public DocumentResponseModel GetModel() => new DocumentResponseModel { Id = ID, Exists = true, Data = GetData() };
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filename"></param>
         public Document(string filename)
         {
             lock (locker)
@@ -31,6 +33,10 @@ namespace Lucraft.Database
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, object> GetData()
         {
             lock (locker)
@@ -42,6 +48,10 @@ namespace Lucraft.Database
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
         public void SetData(Dictionary<string, object> data) 
         {
             lock (locker)
@@ -60,5 +70,11 @@ namespace Lucraft.Database
                 }
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public DocumentResponseModel GetModel() => new DocumentResponseModel { Id = ID, Exists = true, Data = GetData() };
     }
 }

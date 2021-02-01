@@ -5,12 +5,19 @@ using System.IO;
 
 namespace Lucraft.Database
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Collection
     {
         public string ID { get; set; }
         public string Path { get; set; }
         public List<Document> Documents { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public CollectionResponseModel GetModel()
         {
             List<DocumentResponseModel> documentModels = new List<DocumentResponseModel>();
@@ -18,6 +25,11 @@ namespace Lucraft.Database
             return new CollectionResponseModel { Id = this.ID, Documents = documentModels };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Document GetDocument(string id)
         {
             foreach (var document in Documents)
@@ -28,6 +40,11 @@ namespace Lucraft.Database
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Document CreateDocument(string id)
         {
             if (id.Equals("*"))
@@ -38,7 +55,7 @@ namespace Lucraft.Database
                 // this is just a safety meassure
                 // to make sure no data is overwritten,
                 // because the id aready existed
-                while (GetDocument(id) != null)
+                while (GetDocument(id) is not null)
                 {
                     SimpleLogger.Log(Level.Debug, "random id already in use");
                     SimpleLogger.Log(Level.Debug, "generating new random id");
@@ -53,10 +70,16 @@ namespace Lucraft.Database
             return document;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="error"></param>
+        /// <returns></returns>
         public bool DeleteDocument(string id, out string error)
         {
             Document document = GetDocument(id);
-            if (document != null)
+            if (document is not null)
             {
                 try
                 {
@@ -68,13 +91,14 @@ namespace Lucraft.Database
                 catch (Exception e)
                 {
                     error = e.Message;
+                    return false;
                 }
             } 
             else
             {
                 error = "Document with ID " + id + " does not exist";
+                return false;
             }
-            return false;
         }
     }
 }

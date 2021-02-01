@@ -5,15 +5,23 @@ using System.Text.RegularExpressions;
 
 namespace Lucraft.Database.Query
 {
+    /// <summary>
+    /// 
+    /// </summary>
     internal static class ConditionLexer
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <returns></returns>
         public static List<Token> GetTokens(string condition)
         {
             List<Token> tokens = new();
             string[] chars = condition.ToCharArray().Select(c => c.ToString()).ToArray();
             for (int i = 0; i < chars.Length; i++)
             {
-                if (Regex.IsMatch(chars[i], "\\s")) { } // continue 
+                if (Regex.IsMatch(chars[i], "\\s")) continue;
                 else if (Regex.IsMatch(chars[i], "[a-zA-Z_]"))
                 {
                     string s = "";
