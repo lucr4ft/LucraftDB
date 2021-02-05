@@ -46,28 +46,27 @@ namespace Lucraft.Database.Query
         /// </summary>
         /// <param name="tokens"></param>
         /// <returns></returns>
+        /// Todo: implement syntax checking
         private static Condition EvalParenthesis(IReadOnlyList<Token> tokens)
         {
             List<object> list = new();
-            for (int i = 0; i < tokens.Count; i++)
+            int c1 = tokens.Count;
+            int c2 = tokens.Count - 1;
+            for (int i = 0; i < c1; i++)
             {
                 if (tokens[i].TokenType == TokenType.LeftParenthesis)
                 {
+                    i++;
                     int open = 1, close = 0;
-                    List<Token> temp = new() { tokens[i++] };
+                    List<Token> temp = new List<Token>();
                     do
                     {
-                        temp.Add(tokens[i]);
-                        if (i > tokens.Count - 1) throw new Exception();
-                        if (tokens[i].TokenType == TokenType.LeftParenthesis) 
-                            open++;
-                        else if (tokens[i].TokenType == TokenType.RightParenthesis) 
-                            close++;
-                        i++;
+                        temp.Add(tokens[i++]);
+                        if (i == c2) throw new Exception();
+                        if (tokens[i].TokenType == TokenType.LeftParenthesis) open++;
+                        else if (tokens[i].TokenType == TokenType.RightParenthesis) close++;
                     } while (open > close);
-                    i--;
-                    Condition tempCondition = EvalParenthesis(temp.GetRange(1, temp.Count - 2));
-                    list.Add(tempCondition);
+                    list.Add(EvalParenthesis(temp));
                 }
                 else
                     list.Add(tokens[i]);
@@ -79,7 +78,7 @@ namespace Lucraft.Database.Query
                 return new Condition((string) ((Token)list[0]).Value, (string) ((Token)list[1]).Value, (string) ((Token)list[2]).Value);
             }
             if (list.Count == 0 || list[0] is not Condition)
-                throw new Exception();
+                throw new Exception("Malformed Query #1");
             return list[0] as Condition;
         }
     }
