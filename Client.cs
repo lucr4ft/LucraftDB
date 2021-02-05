@@ -1,10 +1,12 @@
-﻿using NuGet.Versioning;
+﻿using Lucraft.Database.Security;
+using NuGet.Versioning;
 using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Lucraft.Database.Security.Authentication;
 
 namespace Lucraft.Database
 {
@@ -13,8 +15,9 @@ namespace Lucraft.Database
     /// </summary>
     public sealed class Client
     {
-        public readonly Socket socket;
-        private readonly NetworkStream _stream;
+        public User User { get; init; }
+
+        public readonly Socket Socket;
         private readonly StreamReader _reader;
         private readonly StreamWriter _writer;
 
@@ -24,10 +27,10 @@ namespace Lucraft.Database
         /// <param name="socket"></param>
         public Client(Socket socket)
         {
-            this.socket = socket;
-            _stream = new NetworkStream(socket);
-            _reader = new StreamReader(_stream);
-            _writer = new StreamWriter(_stream) { AutoFlush = true };
+            this.Socket = socket;
+            var stream = new NetworkStream(socket);
+            _reader = new StreamReader(stream);
+            _writer = new StreamWriter(stream) { AutoFlush = true };
         }
 
         /// <summary>
@@ -67,9 +70,9 @@ namespace Lucraft.Database
         public void Disconnect(string msg)
         {
             SendLine(msg);
-            Console.WriteLine($"[{Thread.CurrentThread.Name}{DateTime.Now}] Closing connection to [{ socket.RemoteEndPoint}]");
-            socket.Shutdown(SocketShutdown.Both);
-            socket.Close();
+            Console.WriteLine($"[{Thread.CurrentThread.Name}{DateTime.Now}] Closing connection to [{ Socket.RemoteEndPoint}]");
+            Socket.Shutdown(SocketShutdown.Both);
+            Socket.Close();
             Console.WriteLine($"[{Thread.CurrentThread.Name}{DateTime.Now}] Connection closed successful");
         }
     }
