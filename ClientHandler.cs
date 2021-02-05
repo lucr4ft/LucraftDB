@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using NuGet.Versioning;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -66,14 +67,18 @@ namespace Lucraft.Database
         /// <returns></returns>
         private static async Task StartListening(Client client)
         {
+            Stopwatch stopwatch = new Stopwatch();
             while (true)
             {
                 string req = await client.ReadLineAsync();
-                SimpleLogger.Log(Level.Info, $"Read {req.Length} bytes from {client.socket.RemoteEndPoint}.");
+                SimpleLogger.Log(Level.Info, $"Read {req.Length} bytes from {client.Socket.RemoteEndPoint}.");
                 SimpleLogger.Log(Level.Debug, $"Data read : {req}");
+                stopwatch.Start();
                 string res = Request.TryParse(req, out Request request)
                     ? RequestHandler.HandleRequest(request)
                     : new ErrorResponseModel { Error = "lucraft.database.exception.malformed_request", ErrorMessage = "Malformed Request #1" }.ToString();
+                stopwatch.Stop();
+                SimpleLogger.Log(Level.Debug, $"Elapsed Time: {(decimal)stopwatch.ElapsedTicks / 10_000} milliseconds");
                 await client.SendLineAsync(res);
                 SimpleLogger.Log(Level.Debug, $"Data sent : {res}");
             }
