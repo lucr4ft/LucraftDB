@@ -40,9 +40,8 @@ namespace Lucraft.Database.Query
                             tokens.Add(new Token(TokenType.Identifier, s));
                             break;
                     }
-
-                    if (chars.Length > i && !Regex.IsMatch(chars[i], "[a-zA-Z_0-9]"))
-                        i--;
+                    //if (chars.Length > i && !Regex.IsMatch(chars[i], "[a-zA-Z_0-9]"))
+                    i--;
                 }
                 else if (Regex.IsMatch(chars[i], "[0-9]") || (Regex.IsMatch(chars[i], "\\.") && chars.Length > i + 1 &&
                                                               Regex.IsMatch(chars[i + 1], "[0-9]")))
@@ -51,9 +50,9 @@ namespace Lucraft.Database.Query
                     string temp = s;
                     while (++i < chars.Length && Regex.IsMatch(temp += chars[i], "^([0-9]*(\\.)?)?[0-9]*$"))
                         s += chars[i];
-                    tokens.Add(new Token(TokenType.NumberLiteral, Convert.ToDouble(s)));
-                    if (chars.Length > i && !Regex.IsMatch(temp, "^[0-9]*(\\.)?[0-9]*$"))
-                        i--;
+                    tokens.Add(new Token(TokenType.NumberLiteral, Convert.ToDecimal(s)));
+                    //if (chars.Length > i && !Regex.IsMatch(temp, "^[0-9]*(\\.)?[0-9]*$"))
+                    i--;
                 }
                 else if (chars[i].Equals("\""))
                 {
@@ -125,6 +124,7 @@ namespace Lucraft.Database.Query
                 else
                 {
                     Console.Error.WriteLine("unknown char: " + chars[i]);
+                    throw new Exception("Malformed Query #2");
                 }
             }
             return tokens;
