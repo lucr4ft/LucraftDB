@@ -10,7 +10,9 @@ namespace Lucraft.Database
 
         public static void Load()
         {
-            string[] dbDirs = Directory.GetDirectories(DatabaseServer.ROOT_PATH + "/data/");
+            if (!Directory.Exists(DatabaseServer.DATA_PATH))
+                Directory.CreateDirectory(DatabaseServer.DATA_PATH);
+            string[] dbDirs = Directory.GetDirectories(DatabaseServer.DATA_PATH);
             foreach (var dbDir in dbDirs)
             {
                 List<Collection> collections = new List<Collection>();
