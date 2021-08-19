@@ -51,30 +51,30 @@ namespace Lucraft.Database
         public static Request Parse(string req)
         {
             string[] split = req.Split(" ");
-            // RequestType
-            if (split.Length < 2) throw new ArgumentException("Malformed Request #1");
-            string reqType = split[0].ToLower();
-            if (!requestTypes.ContainsKey(reqType)) throw new ArgumentException("Unknown RequestType #1");
-            RequestType requestType = requestTypes[reqType];
-            // Path
-            string path = split[1];
-            // Condition | Data, if specified
+            
+            if (split.Length < 2)
+                throw new ArgumentException("Malformed Request #1");
+
+            RequestType requestType = ParseRequestType(split[0]);
+            string path = split[1][1..]; // remove the first '/'
             Condition condition = null;
             string data = null;
+
             if (split.Length > 2)
             {
                 // Data, if specified
                 if (split[2].Equals("?"))
                 {
-                    string[] qrySplit = req.Split("?");
-                    if (qrySplit.Length > 2) throw new ArgumentException("Malformed Request #2");
-                    if (!ConditionParser.TryParse(qrySplit[1], out condition)) throw new Exception("Malformed Query Condition #1");
+                    // split the request string at '?' and continue with the second part
+                    string cond = req[req.IndexOf("?")..];
+                    if (!ConditionParser.TryParse(cond, out condition))
+                        throw new Exception("Malformed Query Condition #1");
                 }
                 else
                 {
                     if (split.Length > 3)
                         throw new ArgumentException("Malformed Request #3");
-                    data = req[(reqType.Length + path.Length + 2)..];
+                    data = req[(split[0].Length + path.Length + 3)..];
                     // validate json data
                     if (JsonConvert.DeserializeObject(data) is null)
                         throw new JsonException("invalid json #1");
@@ -108,6 +108,19 @@ namespace Lucraft.Database
                 request = null;
                 return false;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rt"></param>
+        /// <returns></returns>
+        private static RequestType ParseRequestType(string rt)
+        {
+            rt = rt.ToLower();
+            if (!requestTypes.ContainsKey(rt))
+                throw new ArgumentException("Unknown RequestType #1");
+            return requestTypes[rt];
         }
         #endregion
 
