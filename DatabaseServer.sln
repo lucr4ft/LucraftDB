@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lucraft.Database", "Lucraft.Database.csproj", "{45846A68-0189-464E-AB13-57B4C1F0B9A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lucraft.Database", "src/Lucraft.Database.csproj", "{45846A68-0189-464E-AB13-57B4C1F0B9A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
