@@ -1,4 +1,6 @@
-﻿namespace Lucraft.Database.Query
+﻿using System;
+
+namespace Lucraft.Database.Query
 {
     /// <summary>
     /// 
@@ -26,7 +28,7 @@
     /// <summary>
     /// 
     /// </summary>
-    public readonly struct Token
+    public readonly struct Token : IEquatable<Token>
     {
         public readonly TokenType TokenType;
         public readonly object Value;
@@ -42,9 +44,19 @@
             Value = value;
         }
 
+        public bool Equals(Token other)
+        {
+            return (TokenType == other.TokenType) && (Value == other.Value);
+        }
+
         public override string ToString()
         {
             return "Type: " + TokenType + "; Value: " + Value;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Token token && Equals(token);
         }
     }
 }
