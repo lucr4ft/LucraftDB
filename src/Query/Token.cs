@@ -58,5 +58,20 @@ namespace Lucraft.Database.Query
         {
             return obj is Token token && Equals(token);
         }
+
+        public static bool operator ==(Token left, Token right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Token left, Token right)
+        {
+            return !(left == right);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(TokenType, Value);
+        }
     }
 }
