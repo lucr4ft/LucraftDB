@@ -1,9 +1,6 @@
-﻿using NuGet.Versioning;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Lucraft.Database
@@ -34,7 +31,9 @@ namespace Lucraft.Database
         public void Start()
         {
             if (running)
-                throw new Exception("Server is already runnig!");
+            {
+                throw new InvalidOperationException("Server is already running!");
+            }
             try
             {
                 listener.Bind(localEndPoint);
@@ -63,7 +62,9 @@ namespace Lucraft.Database
         public void Shutdown()
         {
             if (!running)
-                throw new Exception("Server is not runnig");
+            {
+                throw new InvalidOperationException("Server is not running");
+            }
             SimpleLogger.Log(Level.Info, "Stopping server...");
             ClientHandler.DisconnectAll("Stopping server");
             listener.Shutdown(SocketShutdown.Both);
