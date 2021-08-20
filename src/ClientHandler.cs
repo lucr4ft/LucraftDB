@@ -40,17 +40,22 @@ namespace Lucraft.Database
         {
             string clientData = await client.ReadLineAsync();
             var metadata = new Dictionary<string, string>();
+
             foreach (string line in clientData.Split(";"))
+            {
                 metadata.Add(line.Split("=")[0], line.Split("=")[1]);
-            Console.WriteLine(metadata["version"]);
+            }
+
             SemanticVersion clientVersion = SemanticVersion.Parse(metadata["version"]);
+
             if (clientVersion < DatabaseServer.MinimumClientVersion)
             {
-                client.Disconnect(JsonConvert.SerializeObject(new ErrorResponseModel
+                client.Disconnect(new ErrorResponseModel
                 {
                     Error = "lucraft.database.exception.outdated_client",
-                    ErrorMessage = $"client needs AT LEAST version {DatabaseServer.MinimumClientVersion} to connect to this server" // Todo: send better error message
-                }));
+                    ErrorMessage = $"client needs AT LEAST version {DatabaseServer.MinimumClientVersion} to connect to this server"
+                }.ToString());
+                client.Dispose();
                 return false;
             }
             else
