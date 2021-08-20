@@ -1,5 +1,6 @@
 ﻿using Lucraft.Database.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,8 @@ namespace Lucraft.Database
         private readonly object locker = new object();
 
         private Dictionary<string, object> Data { get; set; }
+
+        public Collection Parent { get; set; }
 
         /// <summary>
         /// 
@@ -75,6 +78,6 @@ namespace Lucraft.Database
         /// 
         /// </summary>
         /// <returns></returns>
-        public DocumentResponseModel GetModel() => new DocumentResponseModel { Id = ID, Exists = true, Data = GetData() };
+        public DocumentResponseModel GetModel() => new() { Id = ID, Exists = true, Data = GetData() };
     }
 }
