@@ -32,7 +32,9 @@ namespace Lucraft.Database.Security.Rules
             try
             {
                 if ((rule = Parse(rule: ruleStr)) is null)
+                {
                     return false;
+                }
                 return true;
             }
             catch (Exception)

@@ -11,16 +11,18 @@ namespace Lucraft.Database
         public static void Load()
         {
             if (!Directory.Exists(DatabaseServer.DATA_PATH))
+            {
                 Directory.CreateDirectory(DatabaseServer.DATA_PATH);
+            }
             string[] dbDirs = Directory.GetDirectories(DatabaseServer.DATA_PATH);
             foreach (var dbDir in dbDirs)
             {
-                List<Collection> collections = new List<Collection>();
+                var collections = new List<Collection>();
                 string[] collectionDirs = Directory.GetDirectories(dbDir);
                 foreach (var collectionDir in collectionDirs)
                 {
                     string[] documentFiles = Directory.GetFiles(collectionDir);
-                    List<Document> documents = documentFiles.Select(documentFile => new Document(documentFile) { ID = Path.GetFileNameWithoutExtension(documentFile) }).ToList();
+                    var documents = documentFiles.Select(documentFile => new Document(documentFile) { ID = Path.GetFileNameWithoutExtension(documentFile) }).ToList();
                     collections.Add(new Collection
                     {
                         ID = Path.GetFileName(collectionDir),

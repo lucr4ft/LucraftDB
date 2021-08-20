@@ -52,12 +52,14 @@ namespace Lucraft.Database.Query
         public bool Check(Document document)
         {
             if (_type == 1)
+            {
                 return _op switch
                 {
                     "||" => _con1.Check(document) || _con2.Check(document),
                     "&&" => _con1.Check(document) && _con2.Check(document),
                     _ => false,
                 };
+            }
             Dictionary<string, object> data = document.GetData();
             return _op switch
             {
@@ -92,7 +94,9 @@ namespace Lucraft.Database.Query
         public override string ToString()
         {
             if (_type == 0)
+            {
                 return "Condition:{" + _field + "," + _op + "," + _value + "}";
+            }
             return "Condition:{" + _con1 + "," + _op + "," + _con2 + "}";
         }
     }

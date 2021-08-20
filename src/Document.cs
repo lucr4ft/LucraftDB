@@ -13,7 +13,7 @@ namespace Lucraft.Database
         public string ID { get; init; }
         public string Filename { get; init; }
 
-        private readonly object locker = new object();
+        private readonly object locker = new();
 
         private Dictionary<string, object> Data { get; set; }
 
@@ -29,9 +29,13 @@ namespace Lucraft.Database
             {
                 Filename = filename;
                 if (!File.Exists(filename))
+                {
                     File.Create(filename).Close();
+                }
                 else if (DatabaseServer.Config.DataOptions.AllowMemoryStorage)
+                {
                     Data = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(Filename));
+                }
                 SimpleLogger.Log(Level.Debug, $"Loaded document: {filename}");
             }
         }

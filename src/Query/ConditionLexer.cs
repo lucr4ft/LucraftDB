@@ -51,7 +51,9 @@ namespace Lucraft.Database.Query
                     string s = chars[i];
                     string temp = s;
                     while (++i < chars.Length && Regex.IsMatch(temp += chars[i], "^([0-9]*(\\.)?)?[0-9]*$"))
+                    {
                         s += chars[i];
+                    }
                     tokens.Add(new Token(TokenType.NumberLiteral, Convert.ToDecimal(s)));
                     i--;
                 }
