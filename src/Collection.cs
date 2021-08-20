@@ -38,7 +38,9 @@ namespace Lucraft.Database
             foreach (var document in Documents)
             {
                 if (document.ID == id)
+                {
                     return document;
+                }
             }
             return null;
         }
