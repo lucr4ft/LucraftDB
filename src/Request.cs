@@ -1,4 +1,5 @@
-﻿using Lucraft.Database.Query;
+﻿using Lucraft.Database.Exceptions;
+using Lucraft.Database.Query;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -53,7 +54,9 @@ namespace Lucraft.Database
             string[] split = req.Split(" ");
             
             if (split.Length < 2)
+            {
                 throw new ArgumentException("Malformed Request #1");
+            }
 
             RequestType requestType = ParseRequestType(split[0]);
             string path = split[1][1..]; // remove the first '/'
@@ -68,16 +71,22 @@ namespace Lucraft.Database
                     // split the request string at '?' and continue with the second part
                     string cond = req[req.IndexOf("?")..];
                     if (!ConditionParser.TryParse(cond, out condition))
-                        throw new Exception("Malformed Query Condition #1");
+                    {
+                        throw new MalformedQueryException("Malformed Query Condition #1");
+                    }
                 }
                 else
                 {
                     if (split.Length > 3)
+                    {
                         throw new ArgumentException("Malformed Request #3");
+                    }
                     data = req[(split[0].Length + path.Length + 3)..];
-                    // validate json data
+                    // validate if data is in json syntax
                     if (JsonConvert.DeserializeObject(data) is null)
+                    {
                         throw new JsonException("invalid json #1");
+                    }
                 }
             }
             return new Request
@@ -99,8 +108,11 @@ namespace Lucraft.Database
         {
             try
             {
-                if ((request = Parse(req)) is null)
+                request = Parse(req);
+                if (request is null)
+                {
                     return false;
+                }
                 return true;
             }
             catch (Exception)
@@ -117,9 +129,11 @@ namespace Lucraft.Database
         /// <returns></returns>
         private static RequestType ParseRequestType(string rt)
         {
-            rt = rt.ToLower();
+            rt = rt.ToLowerInvariant();
             if (!requestTypes.ContainsKey(rt))
+            {
                 throw new ArgumentException("Unknown RequestType #1");
+            }
             return requestTypes[rt];
         }
         #endregion
