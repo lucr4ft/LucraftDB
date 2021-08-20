@@ -9,7 +9,7 @@ namespace Lucraft.Database.Security.Rules
     /// <summary>
     /// 
     /// </summary>
-    class RuleParser
+    public static class RuleParser
     {
         /// <summary>
         /// 
@@ -31,7 +31,8 @@ namespace Lucraft.Database.Security.Rules
         {
             try
             {
-                if ((rule = Parse(rule: ruleStr)) is null)
+                rule = Parse(rule: ruleStr);
+                if (rule is null)
                 {
                     return false;
                 }
