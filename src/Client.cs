@@ -14,7 +14,7 @@ namespace Lucraft.Database
     {
         public User User { get; init; }
 
-        public readonly Socket Socket;
+        private readonly Socket Socket;
         private readonly StreamReader _reader;
         private readonly StreamWriter _writer;
 
