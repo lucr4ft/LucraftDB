@@ -11,7 +11,7 @@ namespace Lucraft.Database
     /// <summary>
     /// 
     /// </summary>
-    public sealed class RequestHandler
+    public static class RequestHandler
     {
         /// <summary>
         /// 
