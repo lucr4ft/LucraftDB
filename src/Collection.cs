@@ -1,4 +1,5 @@
 ﻿using Lucraft.Database.Models;
+using Lucraft.Database.Schema;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,15 +15,17 @@ namespace Lucraft.Database
         public string Path { get; set; }
         public List<Document> Documents { get; set; }
 
+        public DocumentSchema DocumentSchema { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public CollectionResponseModel GetModel()
         {
-            List<DocumentResponseModel> documentModels = new List<DocumentResponseModel>();
+            var documentModels = new List<DocumentResponseModel>();
             Documents.ForEach((Document doc) => documentModels.Add(doc.GetModel()));
-            return new CollectionResponseModel { Id = this.ID, Documents = documentModels };
+            return new CollectionResponseModel { Id = ID, Documents = documentModels };
         }
 
         /// <summary>
@@ -62,7 +65,7 @@ namespace Lucraft.Database
                     id = Utilities.GetRandomId();
                 }
             }
-            Document document = new Document(Path + "/" + id + ".db")
+            var document = new Document(Path + "/" + id + ".db")
             {
                 ID = id
             };
