@@ -67,7 +67,7 @@ namespace Lucraft.Database
         /// <returns></returns>
         private static async Task StartListening(Client client)
         {
-            Stopwatch stopwatch = new Stopwatch();
+            var stopwatch = new Stopwatch();
             while (true)
             {
                 string req = await client.ReadLineAsync();
@@ -87,12 +87,20 @@ namespace Lucraft.Database
         /// <summary>
         /// 
         /// </summary>
-        public static void DisconnectAll() => Clients.ForEach(c => c.Disconnect());
+        public static void DisconnectAll() => Clients.ForEach(c =>
+        {
+            c.Disconnect();
+            c.Dispose();
+        });
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="msg"></param>
-        public static void DisconnectAll(string msg) => Clients.ForEach(c => c.Disconnect(msg));
+        public static void DisconnectAll(string msg) => Clients.ForEach(c =>
+        {
+            c.Disconnect(msg);
+            c.Dispose();
+        });
     }
 }

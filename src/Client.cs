@@ -13,7 +13,7 @@ namespace Lucraft.Database
     /// <summary>
     /// 
     /// </summary>
-    public sealed class Client
+    public sealed class Client : IDisposable
     {
         public User User { get; init; }
 
@@ -74,6 +74,13 @@ namespace Lucraft.Database
             Socket.Shutdown(SocketShutdown.Both);
             Socket.Close();
             Console.WriteLine($"[{Thread.CurrentThread.Name}{DateTime.Now}] Connection closed successful");
+        }
+
+        public void Dispose()
+        {
+            ((IDisposable)Socket).Dispose();
+            ((IDisposable)_reader).Dispose();
+            ((IDisposable)_writer).Dispose();
         }
     }
 }
