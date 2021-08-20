@@ -45,9 +45,13 @@ namespace Lucraft.Database
             lock (locker)
             {
                 if (DatabaseServer.Config.DataOptions.AllowMemoryStorage)
+                {
                     return Data;
+                }
                 else
-                    return JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(Filename)); // data;
+                {
+                    return JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(Filename));
+                }
             }
         }
 
