@@ -24,7 +24,7 @@ namespace Lucraft.Database
         public CollectionResponseModel GetModel()
         {
             var documentModels = new List<DocumentResponseModel>();
-            Documents.ForEach((Document doc) => documentModels.Add(doc.GetModel()));
+            Documents.ForEach(doc => documentModels.Add(doc.GetModel()));
             return new CollectionResponseModel { Id = ID, Documents = documentModels };
         }
 
