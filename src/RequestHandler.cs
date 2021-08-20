@@ -189,7 +189,7 @@ namespace Lucraft.Database
             // if an error occures during deletion
             // error will contain the error
             // else error will be null
-            collection.DeleteDocument(pathSplit[2], out string error);
+            collection.TryDeleteDocument(pathSplit[2], out string error);
             return new ErrorResponseModel { ErrorMessage = error ?? "ResponseModel not created yet!" };
         }
     }

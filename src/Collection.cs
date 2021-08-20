@@ -79,7 +79,7 @@ namespace Lucraft.Database
         /// <param name="id"></param>
         /// <param name="error"></param>
         /// <returns></returns>
-        public bool DeleteDocument(string id, out string error)
+        public bool TryDeleteDocument(string id, out string error)
         {
             Document document = GetDocument(id);
             if (document is not null)
