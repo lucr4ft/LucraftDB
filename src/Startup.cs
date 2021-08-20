@@ -13,7 +13,6 @@ namespace Lucraft.Database
 
         public void Configure(IEnvironment env)
         {
-            if (env.IsDevelopment()) { }
             SimpleLogger.Debug = Configuration.Debug || env.IsDevelopment();
         }
     }
