@@ -1,9 +1,6 @@
-﻿using Lucraft.Database.Security;
-using NuGet.Versioning;
-using System;
+﻿using System;
 using System.IO;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Lucraft.Database.Security.Authentication;
@@ -27,7 +24,7 @@ namespace Lucraft.Database
         /// <param name="socket"></param>
         public Client(Socket socket)
         {
-            this.Socket = socket;
+            Socket = socket;
             var stream = new NetworkStream(socket);
             _reader = new StreamReader(stream);
             _writer = new StreamWriter(stream) { AutoFlush = true };
@@ -43,7 +40,7 @@ namespace Lucraft.Database
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<string> ReadLineAsync() => await _reader.ReadLineAsync();
+        public async Task<string> ReadLineAsync() => await _reader.ReadLineAsync().ConfigureAwait(false);
 
         /// <summary>
         /// 
@@ -56,7 +53,7 @@ namespace Lucraft.Database
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public async Task SendLineAsync(string s) => await _writer.WriteAsync($"{s}\n");
+        public async Task SendLineAsync(string s) => await _writer.WriteAsync($"{s}\n").ConfigureAwait(false);
 
         /// <summary>
         /// 
