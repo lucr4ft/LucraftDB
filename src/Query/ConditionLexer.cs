@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Lucraft.Database.Query
@@ -18,29 +19,27 @@ namespace Lucraft.Database.Query
         /// <returns></returns>
         public static List<Token> GetTokens(string condition)
         {
-            List<Token> tokens = new();
+            var tokens = new List<Token>();
             string[] chars = condition.ToCharArray().Select(c => c.ToString()).ToArray();
             for (int i = 0; i < chars.Length; i++)
             {
                 if (Regex.IsMatch(chars[i], "\\s")) continue;
                 else if (Regex.IsMatch(chars[i], "[a-zA-Z_]"))
                 {
-                    string s = "";
+                    var builder = new StringBuilder();
                     while (chars.Length > i && Regex.IsMatch(chars[i], "[a-zA-Z_0-9-]"))
-                        s += chars[i++];
-                    switch (s)
                     {
-                        case "true":
-                        case "false":
-                            tokens.Add(new Token(TokenType.Boolean, bool.Parse(s)));
-                            break;
-                        case "null":
-                            tokens.Add(new Token(TokenType.NullValue, null));
-                            break;
-                        default:
-                            tokens.Add(new Token(TokenType.Identifier, s));
-                            break;
+                        builder.Append(chars[i++]);
                     }
+
+                    tokens.Add(builder.ToString() switch
+                    {
+                        "true" => new Token(TokenType.Boolean, true),
+                        "false" => new Token(TokenType.Boolean, false),
+                        "null" => new Token(TokenType.NullValue, null),
+                        _ => new Token(TokenType.Identifier, builder.ToString())
+                    });
+
                     i--;
                 }
                 else if (Regex.IsMatch(chars[i], "[0-9]") || (Regex.IsMatch(chars[i], "\\.") && chars.Length > i + 1 &&
@@ -55,10 +54,12 @@ namespace Lucraft.Database.Query
                 }
                 else if (chars[i].Equals("\""))
                 {
-                    string s = "";
+                    var builder = new StringBuilder();
                     while (chars.Length > i + 1 && !chars[++i].Equals("\""))
-                        s += chars[i];
-                    tokens.Add(new Token(TokenType.StringLiteral, s));
+                    {
+                        builder.Append(chars[i]);
+                    }
+                    tokens.Add(new Token(TokenType.StringLiteral, builder.ToString()));
                 }
                 else if (chars[i].Equals("("))
                 {
@@ -70,21 +71,41 @@ namespace Lucraft.Database.Query
                 }
                 else if (chars[i].Equals("="))
                 {
-                    if (chars.Length > i + 1 && chars[i + 1].Equals("="))
+                    if (chars.Length > i + 1)
                     {
-                        tokens.Add(new Token(TokenType.IsEqualTo, "=="));
-                        i++;
+                        if (chars[i + 1].Equals("="))
+                        {
+                            tokens.Add(new Token(TokenType.IsEqualTo, "=="));
+                            i++;
+                        }
+                        else
+                        {
+                            throw new MalformedQueryException($"Unknown operator '={ chars[i + 1] }'");
+                        }
                     }
-                    else throw new Exception();
+                    else
+                    {
+                        throw new MalformedQueryException($"Unexpected character '{ chars[i] }' at { i + 1 }");
+                    }
                 }
                 else if (chars[i].Equals("!"))
                 {
-                    if (chars.Length > i + 1 && chars[i + 1].Equals("="))
+                    if (chars.Length > i + 1)
                     {
-                        tokens.Add(new Token(TokenType.IsNotEqualTo, "!="));
-                        i++;
+                        if (chars[i + 1].Equals("="))
+                        {
+                            tokens.Add(new Token(TokenType.IsNotEqualTo, "!="));
+                            i++;
+                        }
+                        else
+                        {
+                            throw new MalformedQueryException($"Unknown operator '!{ chars[i + 1] }'");
+                        }
                     }
-                    else throw new Exception();
+                    else
+                    {
+                        throw new MalformedQueryException($"Unexpected character '{ chars[i] }' at { i + 1 }");
+                    }
                 }
                 else if (chars[i].Equals("<"))
                 {
