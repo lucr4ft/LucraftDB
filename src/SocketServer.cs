@@ -13,7 +13,10 @@ namespace Lucraft.Database
     /// </summary>
     public sealed class SocketServer
     {
-        private bool running = false;
+        /// <summary>
+        /// 
+        /// </summary>
+        private bool running;
 
         /// <summary>
         /// 
