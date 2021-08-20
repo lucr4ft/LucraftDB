@@ -71,10 +71,10 @@ namespace Lucraft.Database
         public void Disconnect(string msg)
         {
             SendLine(msg);
-            Console.WriteLine($"[{Thread.CurrentThread.Name}{DateTime.Now}] Closing connection to [{ Socket.RemoteEndPoint}]");
+            SimpleLogger.Log(Level.Debug, $"Closing connection to [{ Socket.RemoteEndPoint}]");
             Socket.Shutdown(SocketShutdown.Both);
             Socket.Close();
-            Console.WriteLine($"[{Thread.CurrentThread.Name}{DateTime.Now}] Connection closed successful");
+            SimpleLogger.Log(Level.Debug, "Connection closed successful");
         }
 
         public void Dispose()
