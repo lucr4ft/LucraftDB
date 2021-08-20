@@ -1,5 +1,4 @@
 ﻿using Lucraft.Database.Models;
-using Newtonsoft.Json;
 using NuGet.Versioning;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ namespace Lucraft.Database
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ClientHandler
+    public static class ClientHandler
     {
         private static readonly List<Client> Clients = new();
 
@@ -24,10 +23,10 @@ namespace Lucraft.Database
         public static async Task Add(Client client)
         {
             Thread.CurrentThread.Name = "ClientThread#" + DateTimeOffset.Now.ToUnixTimeMilliseconds();
-            if (await Authenticate(client))
+            if (await Authenticate(client).ConfigureAwait(false))
             {
                 Clients.Add(client);
-                await StartListening(client);
+                _ = Task.Run(() => StartListening(client).ConfigureAwait(false));
             }
         }
 
