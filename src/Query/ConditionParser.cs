@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lucraft.Database.Exceptions;
+using System;
 using System.Collections.Generic;
 
 namespace Lucraft.Database.Query
@@ -31,7 +32,9 @@ namespace Lucraft.Database.Query
             {
                 condition = Parse(conditionString);
                 if (condition is null)
+                {
                     return false;
+                }
                 return true;
             }
             catch (Exception)
@@ -49,36 +52,53 @@ namespace Lucraft.Database.Query
         /// Todo: implement syntax checking
         private static Condition EvalParenthesis(IReadOnlyList<Token> tokens)
         {
-            List<object> list = new();
+            var list = new List<object>();
             int c1 = tokens.Count;
             int c2 = tokens.Count - 1;
+
             for (int i = 0; i < c1; i++)
             {
                 if (tokens[i].TokenType == TokenType.LeftParenthesis)
                 {
                     i++;
                     int open = 1, close = 0;
-                    List<Token> temp = new List<Token>();
+                    var temp = new List<Token>();
                     do
                     {
                         temp.Add(tokens[i++]);
-                        if (i == c2) throw new Exception();
-                        if (tokens[i].TokenType == TokenType.LeftParenthesis) open++;
-                        else if (tokens[i].TokenType == TokenType.RightParenthesis) close++;
+                        if (i == c2)
+                        {
+                            throw new MalformedQueryException();
+                        }
+                        else if (tokens[i].TokenType == TokenType.LeftParenthesis)
+                        {
+                            open++;
+                        }
+                        else if (tokens[i].TokenType == TokenType.RightParenthesis)
+                        {
+                            close++;
+                        }
                     } while (open > close);
                     list.Add(EvalParenthesis(temp));
                 }
                 else
+                {
                     list.Add(tokens[i]);
+                }
             }
+
             if (list.Count > 1)
             {
                 if (list[0] is Condition con1 && list[2] is Condition con2)
+                {
                     return new Condition(con1, ((Token)list[1]).Value as string, con2);
-                return new Condition((string) ((Token)list[0]).Value, (string) ((Token)list[1]).Value, (string) ((Token)list[2]).Value);
+                }
+                return new Condition((string)((Token)list[0]).Value, (string)((Token)list[1]).Value, (string)((Token)list[2]).Value);
             }
-            if (list.Count == 0 || list[0] is not Condition)
-                throw new Exception("Malformed Query #1");
+            else if (list.Count == 0 || list[0] is not Condition)
+            {
+                throw new MalformedQueryException("Malformed Query #1");
+            }
             return list[0] as Condition;
         }
     }
