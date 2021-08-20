@@ -48,10 +48,11 @@ namespace Lucraft.Database.Query
                 else if (Regex.IsMatch(chars[i], "[0-9]") || (Regex.IsMatch(chars[i], "\\.") && chars.Length > i + 1 &&
                                                               Regex.IsMatch(chars[i + 1], "[0-9]")))
                 {
+                    i++;
                     var builder = new StringBuilder();
-                    while (++i < chars.Length && Regex.IsMatch(builder.ToString() + chars[i], "^([0-9]*(\\.)?)?[0-9]*$"))
+                    while (i < chars.Length && Regex.IsMatch(builder + chars[i], "^([0-9]*(\\.)?)?[0-9]*$"))
                     {
-                        builder.Append(chars[i]);
+                        builder.Append(chars[i++]);
                     }
                     tokens.Add(new Token(TokenType.NumberLiteral, Convert.ToDecimal(builder.ToString())));
                     i--;
