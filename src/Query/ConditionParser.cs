@@ -7,7 +7,7 @@ namespace Lucraft.Database.Query
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ConditionParser
+    public static class ConditionParser
     {
         /// <summary>
         /// 
