@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace Lucraft.Database
         private readonly StreamReader _reader;
         private readonly StreamWriter _writer;
 
+        public EndPoint RemoteEndPoint { get; init; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -25,6 +28,7 @@ namespace Lucraft.Database
         public Client(Socket socket)
         {
             Socket = socket;
+            RemoteEndPoint = Socket.RemoteEndPoint;
             var stream = new NetworkStream(socket);
             _reader = new StreamReader(stream);
             _writer = new StreamWriter(stream) { AutoFlush = true };

@@ -76,7 +76,7 @@ namespace Lucraft.Database
             while (true)
             {
                 string req = await client.ReadLineAsync();
-                SimpleLogger.Log(Level.Info, $"Read {req.Length} bytes from {client.Socket.RemoteEndPoint}.");
+                SimpleLogger.Log(Level.Info, $"Read {req.Length} bytes from {client.RemoteEndPoint}.");
                 SimpleLogger.Log(Level.Debug, $"Data read : {req}");
                 stopwatch.Start();
                 string res = Request.TryParse(req, out Request request)
