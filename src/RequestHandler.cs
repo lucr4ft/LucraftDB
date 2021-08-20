@@ -1,7 +1,10 @@
 ﻿using Lucraft.Database.Models;
 using Lucraft.Database.Query;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Lucraft.Database
 {
@@ -44,12 +47,16 @@ namespace Lucraft.Database
             // get database
             Database db = Databases.GetDatabase(pathSplit[0]);
             if (db == null)
-                return new ErrorResponseModel { Error = $"Database with ID {pathSplit[0]} does not exist" };
+            {
+                return new ErrorResponseModel { ErrorMessage = $"Database with ID {pathSplit[0]} does not exist" };
+            }
 
             // get collection
             Collection collection = db.GetCollection(pathSplit[1]);
             if (collection == null)
-                return new ErrorResponseModel { Error = $"Collection with ID {pathSplit[1]} does not exist" };
+            {
+                return new ErrorResponseModel { ErrorMessage = $"Collection with ID {pathSplit[1]} does not exist" };
+            }
 
             Document document;
             if ((document = collection.GetDocument(pathSplit[2])) != null)
@@ -76,12 +83,22 @@ namespace Lucraft.Database
             // get database
             Database db = Databases.GetDatabase(pathSplit[0]);
             if (db == null)
-                return new ErrorResponseModel { Error = $"Database with ID {pathSplit[0]} does not exist" };
+            {
+                return new ErrorResponseModel { ErrorMessage = $"Database with ID {pathSplit[0]} does not exist" };
+            }
 
             // get collection
             Collection collection = db.GetCollection(pathSplit[1]);
             if (collection == null)
-                return new ErrorResponseModel { Error = $"Collection with ID {pathSplit[1]} does not exist" };
+            {
+                return new ErrorResponseModel { ErrorMessage = $"Collection with ID {pathSplit[1]} does not exist" };
+            }
+
+            // validate json data
+            if (!JObject.Parse(request.Data).IsValid(collection.DocumentSchema.Schema))
+            {
+                return new ErrorResponseModel { Error = "lucraft.database.invalidjsondata", ErrorMessage = "" };
+            }
 
             // get document
             Document document = collection.GetDocument(pathSplit[2]);
@@ -92,7 +109,7 @@ namespace Lucraft.Database
             // set data of the document
             document.SetData(JsonConvert.DeserializeObject<Dictionary<string, object>>(request.Data));
             // TODO: return Success-model + write-time
-            return new ErrorResponseModel { Error = "ResponseModel not created yet!" };
+            return new ErrorResponseModel { ErrorMessage = "ResponseModel not created yet!" };
         }
 
         /// <summary>
@@ -106,26 +123,43 @@ namespace Lucraft.Database
 
             Database db = Databases.GetDatabase(pathSplit[0]);
             if (db == null)
-                return new ErrorResponseModel { Error = $"Database with ID {pathSplit[0]} does not exist" };
+            {
+                return new ErrorResponseModel { ErrorMessage = $"Database with ID {pathSplit[0]} does not exist" };
+            }
 
             // get collection
             Collection collection = db.GetCollection(pathSplit[1]);
             if (collection == null)
-                return new ErrorResponseModel { Error = $"Collection with ID {pathSplit[1]} does not exist" };
+            {
+                return new ErrorResponseModel { ErrorMessage = $"Collection with ID {pathSplit[1]} does not exist" };
+            }
 
             if (request.Condition is null)
+            {
                 // no condition is specified
                 // return model of the collection
                 return collection.GetModel();
+            }
             else
+            {
                 // request contains a condition
                 // -> evalute condition
                 return QueryHandler.HandleQuery(collection, request.Condition);
+            }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         private static ResponseModel HandleCreateRequest(Request request)
         {
-            return null;
+            return new ErrorResponseModel
+            { 
+                Error = "lucraft.database.notimplementedexception", 
+                ErrorMessage = "Create requests are not implemented yet"
+            };
         }
 
         /// <summary>
@@ -140,19 +174,23 @@ namespace Lucraft.Database
             // get database
             Database db = Databases.GetDatabase(pathSplit[0]);
             if (db == null)
-                return new ErrorResponseModel { Error = $"Database with ID {pathSplit[0]} does not exist" };
+            {
+                return new ErrorResponseModel { ErrorMessage = $"Database with ID {pathSplit[0]} does not exist" };
+            }
 
             // get collection
             Collection collection = db.GetCollection(pathSplit[1]);
             if (collection == null)
-                return new ErrorResponseModel { Error = $"Collection with ID {pathSplit[1]} does not exist" };
+            {
+                return new ErrorResponseModel { ErrorMessage = $"Collection with ID {pathSplit[1]} does not exist" };
+            }
 
             // delete document
             // if an error occures during deletion
             // error will contain the error
             // else error will be null
             collection.DeleteDocument(pathSplit[2], out string error);
-            return new ErrorResponseModel { Error = error ?? "ResponseModel not created yet!" };
+            return new ErrorResponseModel { ErrorMessage = error ?? "ResponseModel not created yet!" };
         }
     }
 }
