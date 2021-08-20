@@ -23,7 +23,10 @@ namespace Lucraft.Database.Query
             string[] chars = condition.ToCharArray().Select(c => c.ToString()).ToArray();
             for (int i = 0; i < chars.Length; i++)
             {
-                if (Regex.IsMatch(chars[i], "\\s")) continue;
+                if (Regex.IsMatch(chars[i], "\\s"))
+                {
+                    continue;
+                }
                 else if (Regex.IsMatch(chars[i], "[a-zA-Z_]"))
                 {
                     var builder = new StringBuilder();
